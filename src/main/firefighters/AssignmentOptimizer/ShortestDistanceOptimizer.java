@@ -59,7 +59,9 @@ public class ShortestDistanceOptimizer implements AssignmentOptimizer {
 
     @Override
     public void update(CityNode oldLocation, FirefighterImpl firefighter, Building building) {
-        tree.remove(building.getLocation());
+        if (! building.isBurning()) {
+            tree.remove(building.getLocation());
+        }
         List<FirefighterImpl> firefighters = firefightersByCityNode.get(oldLocation);
         firefighters.remove(firefighter);
         if (firefighters.isEmpty()){
