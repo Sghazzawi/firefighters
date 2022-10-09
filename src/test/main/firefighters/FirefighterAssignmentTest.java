@@ -2,8 +2,9 @@ package main.firefighters;
 
 import main.api.Building;
 import main.api.CityNode;
-import main.api.Firefighter;
 import main.api.exceptions.FireproofBuildingException;
+import main.api.exceptions.NoFireFoundException;
+import main.firefighters.AssignmentOptimizer.FirefighterAssignment;
 import main.impls.BuildingImpl;
 import org.junit.Test;
 
@@ -20,8 +21,15 @@ public class FirefighterAssignmentTest {
         building.setFire();
         FirefighterImpl firefighter = new FirefighterImpl(firefighterLocation);
 
-        FirefighterAssignment firefighterAssignment = new FirefighterAssignment(firefighter, building);
-        firefighterAssignment.execute();
+        FirefighterAssignment firefighterAssignment = new FirefighterAssignment(firefighter, building, null);
+        firefighterAssignment.execute((ff, b) -> {
+            ff.moveTo(b.getLocation());
+            try {
+                b.extinguishFire();
+            } catch (NoFireFoundException e) {
+                e.printStackTrace();
+            }
+        });
 
         assertEquals(buildingLocation,firefighter.getLocation());
         assertEquals(10, firefighter.distanceTraveled());
